@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
-import org.json.JSONObject;
 
 import com.android.vending.billing.IInAppBillingService;
 
@@ -66,7 +65,6 @@ public class BillingService extends Service {
             for(int i=0;i<length;i++){
                 System.out.println(i);
                 String item = items.get(i);
-                productDetails.add("{ \"productId\" : \"" + item + "\", \"type\" : \"inapp\", \"price\" : \"$5.00\", \"title\" : \"" + item + "\", \"description\" : \"This is an example description\" }");
                 productDetails.add("{ \"productId\" : \"" + item + "\", \"type\" : \"inapp\", \"price\" : \"$5.00\", \"title\" : \"" + item + "\", \"description\" : \"This is an example description\" }");
             }
 
