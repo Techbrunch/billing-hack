@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
+import org.json.JSONObject;
 
 import com.android.vending.billing.IInAppBillingService;
 
@@ -43,11 +44,37 @@ public class BillingService extends Service {
         public Bundle getSkuDetails(int apiVersion, String packageName, String type,
                 Bundle skusBundle) throws RemoteException {
             Log.d(TAG, "getSkuDetails");
+            Log.d(TAG, "apiVersion: " + apiVersion);
+            Log.d(TAG, "packageName: " + packageName);
+            Log.d(TAG, "type: " + type);
+            Log.d(TAG, "skusBundle: " + skusBundle);
+
+            // https://developer.android.com/google/play/billing/billing_reference#getSkuDetails
+            // If getSkuDetails() method is successful, Google Play sends a response Bundle. The
+            // query results are stored in the Bundle within a String ArrayList mapped to the
+            // DETAILS_LIST key. Each String in the details list contains product details for a
+            // single product in JSON format. The fields in the JSON string with the product details
+            // are summarized in table 5.
 
             Bundle bundle = new Bundle();
             bundle.putInt(IabHelper.RESPONSE_CODE, IabHelper.BILLING_RESPONSE_RESULT_OK);
+
+            ArrayList<String> productDetails = new ArrayList<String>();
+
+            ArrayList<String> items = skusBundle.getStringArrayList("ITEM_ID_LIST");
+            int length = items.size();
+            for(int i=0;i<length;i++){
+                System.out.println(i);
+                String item = items.get(i);
+                productDetails.add("{ \"productId\" : \"" + item + "\", \"type\" : \"inapp\", \"price\" : \"$5.00\", \"title\" : \"" + item + "\", \"description\" : \"This is an example description\" }");
+                productDetails.add("{ \"productId\" : \"" + item + "\", \"type\" : \"inapp\", \"price\" : \"$5.00\", \"title\" : \"" + item + "\", \"description\" : \"This is an example description\" }");
+            }
+
+            Log.d(TAG, productDetails.toString());
+
             bundle.putStringArrayList(IabHelper.RESPONSE_GET_SKU_DETAILS_LIST,
-                    new ArrayList<String>());
+                    productDetails);
+
             return bundle;
         }
 
@@ -83,6 +110,10 @@ public class BillingService extends Service {
         public Bundle getPurchases(int apiVersion, String packageName, String type,
                 String continuationToken) throws RemoteException {
             Log.d(TAG, "getPurchases");
+            Log.d(TAG, "apiVersion: " + apiVersion);
+            Log.d(TAG, "packageName: " + packageName);
+            Log.d(TAG, "type: " + type);
+            Log.d(TAG, "continuationToken: " + continuationToken);
 
             Bundle bundle = new Bundle();
             bundle.putInt(IabHelper.RESPONSE_CODE, IabHelper.BILLING_RESPONSE_RESULT_OK);
@@ -92,6 +123,7 @@ public class BillingService extends Service {
             bundle.putStringArrayList(IabHelper.RESPONSE_INAPP_SIGNATURE_LIST,
                     new ArrayList<String>());
 
+            Log.d(TAG, "bundle: " + bundle);
             return bundle;
         }
 
